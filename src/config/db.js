@@ -12,6 +12,7 @@ connection.connect((err) => {
         console.log(err);
         return;
     }
+    console.log(process.env.DB_HOST);
     console.log('DB is connected');
 });
 
