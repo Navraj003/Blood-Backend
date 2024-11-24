@@ -1,0 +1,44 @@
+name: CD pipeline
+
+on:
+    workflow_run:
+        workflows: ["CI pipeline"]
+        types:
+          - completed
+
+jobs:
+
+  deploy:
+
+    runs-on: self-hosted
+
+    steps:
+    - name: Pull the Docker Image from Docker Hub
+      run: sudo docker pull navi003/blood-backend:latest
+
+    - name: Stop and Remove the Old Docker Container
+      run: sudo docker rm -f blood-backend-container || true
+
+    - name: Run the New Docker Container
+      run: |
+        sudo docker run -d -p 5000:50000 \
+          --name blood-backend-container \
+          -e NODE_ENV=development \
+          navi003/blood-backend:latest
+
+    - name: Verify Deployment
+      run: |
+        for i in {1..10}; do
+          if curl -f http://localhost:5000; then
+            echo "Server is up!";
+            exit 0;
+          fi;
+          echo "Waiting for server...";
+          sleep 5;
+        done;
+        echo "Server did not start in time.";
+        exit 1;
+
+    - name: Check Container Logs on Failure
+      if: failure()
+      run: sudo docker logs blood-backend-container
