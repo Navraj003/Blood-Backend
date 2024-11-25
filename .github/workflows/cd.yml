@@ -21,7 +21,7 @@ jobs:
 
     - name: Run the New Docker Container
       run: |
-        sudo docker run -d -p 5000:50000 \
+        sudo docker run -d -p 5000:5000 \
           --name blood-backend-container \
           -e NODE_ENV=development \
             -e PORT=${{ secrets.PORT }} \
