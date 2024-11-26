@@ -9,6 +9,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use('/api/user', userRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/api/admin', adminRoutes); 
 
 export { app };
